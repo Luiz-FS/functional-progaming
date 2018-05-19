@@ -61,12 +61,16 @@ sizeBST NIL = 0
 sizeBST (Node a left right) = 1 + sizeBST left + sizeBST right
 
 --verifica se uma BT é uma BST
-isBST = undefined
+isBST NIL = True
+isBST (Node x left right) = (verify (<x) left) && (verify (>x) right) && isBST left && isBST right
+    where verify f NIL = True
+          verify f (Node x left right) | f x = (verify f left) && (verify f right)
+                                       | otherwise = False
 
 --insere uma nova chave na BST retornando a BST modificada
 insert x NIL = Node x NIL NIL 
-insert x (Node a left right) | x > a = (Node left (insert x right))
-                             | otherwise = (Node (insert x left) right) 
+insert x (Node a left right) | x > a = (Node a left (insert x right))
+                             | otherwise = (Node a (insert x left) right) 
 
 --retorna o Node da BST contendo o dado procurado ou entao NIL
 search _ NIL = NIL
@@ -75,12 +79,12 @@ search x (Node a left right) | x == a = Node a left right
                              | otherwise = search x left
 
 --retorna o elmento maximo da BST
-maximo NIL = error("FOda-se")
+maximo NIL = error "Foda-se"
 maximo (Node a left NIL)= a
 maximo (Node a left right) =  maximo right
 
 --retorna o elemento minimo da BST
-minimos NIL = error("FOda-se")
+minimo NIL = error "Foda-se"
 minimo (Node a NIL right) = a
 minimo (Node a left right) = minimo left
 
@@ -90,8 +94,16 @@ predecessor (Node a left right) = maximo left
 --retorna o sucessor de um elemento da BST, caso o elemento esteja na BST
 successor (Node a left right) = minimo right 
 
+-- Node 4 (Node 2 (Node 1 NIL NIL) (Node 3 NIL NIL)) (Node 6 (Node 5 NIL NIL) (Node 7 NIL NIL))
 --remove ume lemento da BST
-remove = undefined
+remove _ NIL = error "Fudeu!"
+remove n (Node x left right) | n > x = Node x left (remove n right)
+                             | n < x = Node x (remove n left) right
+                             | n == x = removeAux (Node x left right)
+        where removeAux (Node n NIL NIL) = NIL
+              removeAux (Node n left NIL) = left
+              removeAux (Node n NIL right) = right
+              removeAux (Node n left right) = Node (successor (Node n left right)) left (remove (successor (Node n left right)) right)
 
 --retorna uma lista com os dados da BST nos diversos tipos de caminhamento
 preOrder NIL = []
