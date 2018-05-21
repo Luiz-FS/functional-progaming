@@ -32,7 +32,7 @@ remove elem bag | bag == empty = empty
 {-
  - Busca um elemento na estrutura retornando sua quantidade. Caso o elemento nao exista, retorna 0 como a quantidade.
 -}
-search elem bag = undefined
+search elem bag = findWithDefault 0 elem bag
 
 {-
  - Faz a uniao deste Bag com otherBag. A uniao consiste em ter os elementos dos dois Bags com suas maiores quantidades.
